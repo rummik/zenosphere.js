@@ -2,7 +2,7 @@
 'use strict';
 
 Timeline.Stream.type['Last.fm'] = {
-	api: '//ws.audioscrobbler.com/2.0/',
+	api: 'https://ws.audioscrobbler.com/2.0/',
 	xml: true,
 
 	fill: function fillLastfm(done) {

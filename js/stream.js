@@ -77,9 +77,12 @@ Stream.prototype._params = function(callback) {
 		var val = self.feeder.params[key];
 
 		if (typeof val == 'function')
-			val = val();
+			val = val.call(self);
 		else if (val == '?')
 			val = self._callback(callback);
+
+		if (val == undefined)
+			return;
 
 		params += '&' + key + '=' + val;
 	});
