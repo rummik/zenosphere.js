@@ -13,7 +13,13 @@ function Stream(options) {
 	this.pages = this.feeder.pages || 1;
 	this.messages = [];
 
-	this.fill();
+	var self = this;
+	this.fill(function done() {
+		if (!self.full())
+			self.fill(done);
+		else
+			self.ready();
+	});
 }
 
 Stream.type = {};
@@ -23,25 +29,26 @@ Stream.prototype.fill = function(callback) {
 	this.feeder.fill.call(this, callback || function() {});
 };
 
-Stream.prototype.date = function() {
+Stream.prototype.full = function() {
+	return this.page >= this.pages;
+};
+
+Stream.prototype.now = function() {
 	if (this.messages.length)
 		return this.messages[0].date;
 
 	return 0;
 };
 
-Stream.prototype.next = function(callback) {
+Stream.prototype.shift = function(callback) {
 	if (this.end())
 		return false;
 
-	if (!this.messages.length)
-		return this.fill(this.next.bind(this, callback));
-
-	callback(this.messages.shift());
+	return this.messages.shift();
 };
 
 Stream.prototype.end = function() {
-	return this.page >= this.pages && !this.messages.length;
+	return !this.messages.length;
 };
 
 /**

@@ -8,14 +8,14 @@ Timeline.Stream.type['Last.fm'] = {
 	fill: function fillLastfm(done) {
 		var self = this;
 
-		this.get('user/' + this.stream + '/recenttracks.rss?limit=100', function(data) {
+		this.get('user/' + this.stream + '/recenttracks.rss?limit=60', function(data) {
 			var tracks = [].slice.apply(data.querySelectorAll('item'));
 
-			self.messages = tracks.map(function(track) {
-				return {
+			tracks.forEach(function(track) {
+				self.messages.push({
 					date: new Date(track.querySelector('pubDate').innerHTML).valueOf(),
 					message: track.querySelector('title').innerHTML,
-				};
+				});
 			});
 
 			done();

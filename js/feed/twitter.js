@@ -20,11 +20,11 @@ Timeline.Stream.type.Twitter = {
 			doc.body.innerHTML = data.body;
 
 			var tweets = [].slice.apply(doc.querySelectorAll('.tweet'));
-			self.messages = tweets.map(function(tweet) {
-				return {
+			tweets.forEach(function(tweet) {
+				self.messages.push({
 					date: new Date(tweet.querySelector('.permalink').getAttribute('data-datetime')).valueOf(),
 					message: tweet.querySelector('.e-entry-title').innerHTML.replace(/<.+?>/g, ''),
-				};
+				});
 			});
 
 			done();
