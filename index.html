@@ -1,0 +1,29 @@
+<!doctype html>
+<title>Timeline</title>
+
+<div class="timeline"></div>
+
+<script src="js/timeline.js"></script>
+<script src="js/stream.js"></script>
+<script src="js/feed/twitter.js"></script>
+<script src="js/feed/github.js"></script>
+<script src="js/feed/lastfm.js"></script>
+
+<script>
+var timeline = new Timeline({
+	streams: [
+		{
+			type: 'GitHub',
+			stream: 'users/rummik', // user/:user or orgs/:org
+		},
+		{
+			type: 'Twitter',
+			stream: '396025623727992832',
+		},
+		{
+			type: 'Last.fm',
+			stream: 'rummik',
+		},
+	],
+});
+</script>
