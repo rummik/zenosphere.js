@@ -47,7 +47,7 @@ Timeline.prototype.display = function(count) {
 	this.nextMessage(function display(message) {
 		var div = document.createElement('div');
 		div.className = 'message message-' + message.type.toLowerCase().replace(/\W/g, '-');
-		div.innerHTML = message.message;
+		div.innerHTML = '<i class="fa fa-' + Timeline.Stream.type[message.type].icon + '"></i> ' + message.message;
 		self.messages.appendChild(div);
 
 		if (++n <= count)

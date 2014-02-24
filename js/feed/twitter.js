@@ -4,6 +4,8 @@
 var _ = Timeline.helpers;
 
 Timeline.Stream.type.Twitter = {
+	icon: 'twitter',
+
 	api: 'https://cdn.syndication.twimg.com/widgets/timelines/',
 	jsonp: true,
 

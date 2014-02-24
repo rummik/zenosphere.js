@@ -4,6 +4,8 @@
 var _ = Timeline.helpers;
 
 Timeline.Stream.type['Last.fm'] = {
+	icon: 'music',
+
 	api: 'https://ws.audioscrobbler.com/2.0/',
 	xml: true,
 

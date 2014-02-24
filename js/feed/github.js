@@ -4,6 +4,8 @@
 var _ = Timeline.helpers;
 
 Timeline.Stream.type.GitHub = {
+	icon: 'github',
+
 	api: 'https://api.github.com/',
 
 	headers: {
