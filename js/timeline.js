@@ -32,10 +32,16 @@ function Timeline(settings) {
 	});
 }
 
-Timeline.helpers = {
+var _ = Timeline.helpers = {
 	parseTime: function(stamp) {
 		stamp = new Date(stamp).valueOf().toString();
 		return parseInt(stamp.substr(0, stamp.length - 3));
+	},
+
+	template: function(text, data) {
+		return text.replace(/{(\w+)}/g, function(m, key) {
+			return data[key];
+		});
 	},
 };
 
@@ -46,7 +52,7 @@ Timeline.prototype.display = function(count) {
 	this.nextMessage(function display(message) {
 		var div = document.createElement('div');
 		div.className = 'message message-' + message.type.toLowerCase().replace(/\W/g, '-');
-		div.innerHTML = '<i class="fa fa-' + Timeline.Stream.type[message.type].icon + '"></i> ' + message.message;
+		div.innerHTML = _.template('<i class="fa fa-' + Timeline.Stream.type[message.type].icon + '"></i> {message}', message);
 		self.messages.appendChild(div);
 
 		if (++n <= count)
