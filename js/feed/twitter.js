@@ -29,6 +29,14 @@ Timeline.Stream.type.Twitter = {
 			var doc = document.implementation.createHTMLDocument('twitter');
 			doc.body.innerHTML = data.body;
 
+			[].slice.apply(doc.querySelectorAll('.tco-hidden')).forEach(function(element) {
+				element.parentNode.removeChild(element);
+			});
+
+			[].slice.apply(doc.querySelectorAll('a')).forEach(function(a) {
+				a.target = '_blank';
+			});
+
 			var tweets = [].slice.apply(doc.querySelectorAll('.tweet'));
 
 			self.received.init(tweets[0].getAttribute('data-tweet-id'));
@@ -38,7 +46,7 @@ Timeline.Stream.type.Twitter = {
 			tweets.forEach(function(tweet) {
 				self.messages.push({
 					date: _.parseTime(tweet.querySelector('.permalink').getAttribute('data-datetime')),
-					message: tweet.querySelector('.e-entry-title').innerHTML.replace(/<.+?>/g, ''),
+					message: tweet.querySelector('.e-entry-title').innerHTML,
 					link: tweet.querySelector('.permalink').href,
 				});
 			});
