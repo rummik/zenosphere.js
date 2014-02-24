@@ -2,35 +2,41 @@
 'use strict';
 
 function Stream(options) {
+	var self = this;
+
 	this.type = options.type;
 	this.stream = options.stream;
 
 	this.options = options;
 
-	this.feeder = Stream.type[this.type];
-
 	this.page = 0;
-	this.pages = this.feeder.pages || 1;
+	this.pages = 1;
 	this.messages = [];
 
-	var self = this;
-	this.fill(function done() {
-		if (!self.full())
-			self.fill(done);
-		else
-			self.ready();
+	this.received = {
+		high: -1,
+		low: -1,
+	};
+
+	Object.keys(Stream.type[this.type]).forEach(function clone(key) {
+		var val = Stream.type[self.type][key];
+
+		if (typeof val == 'object')
+			val = new val.constructor(val);
+
+		self[key == 'fill' ? '_fill' : key] = val;
 	});
+
+	setTimeout(function() {
+		self.fill(self.ready);
+	}, 1);
 }
 
 Stream.type = {};
 
 Stream.prototype.fill = function(callback) {
 	this.page++;
-	this.feeder.fill.call(this, callback || function() {});
-};
-
-Stream.prototype.full = function() {
-	return this.page >= this.pages;
+	this._fill.call(this, callback || function() {});
 };
 
 Stream.prototype.now = function() {
@@ -40,15 +46,19 @@ Stream.prototype.now = function() {
 	return 0;
 };
 
-Stream.prototype.shift = function(callback) {
-	if (this.end())
-		return false;
+Stream.prototype.read = function(callback) {
+	if (this.messages.length <= 1 && this.page < this.pages)
+		return this.fill(this.read.bind(this, callback));
+	else if (this.empty())
+		return;
 
-	return this.messages.shift();
+	var message = this.messages.shift();
+	message.type = this.type;
+	callback(message);
 };
 
-Stream.prototype.end = function() {
-	return !this.messages.length;
+Stream.prototype.empty = function() {
+	return this.page >= this.pages && !this.messages.length;
 };
 
 /**
@@ -73,8 +83,8 @@ Stream.prototype._params = function(callback) {
 	var self = this;
 	var params = '';
 
-	Object.keys(this.feeder.params).forEach(function(key) {
-		var val = self.feeder.params[key];
+	Object.keys(this.params).forEach(function(key) {
+		var val = self.params[key];
 
 		if (typeof val == 'function')
 			val = val.call(self);
@@ -91,10 +101,10 @@ Stream.prototype._params = function(callback) {
 };
 
 Stream.prototype.get = function(path, callback) {
-	var url = this.feeder.api + path;
+	var url = this.api + path;
 	var self = this;
 
-	if (this.feeder.jsonp) {
+	if (this.jsonp) {
 		var s = document.createElement('script');
 		s.src = url + this._params(callback);
 		document.body.appendChild(s);
@@ -105,7 +115,7 @@ Stream.prototype.get = function(path, callback) {
 
 		xhr.onreadystatechange = function() {
 			if (xhr.readyState == 4 && xhr.status == 200)
-				callback.call(self, self.feeder.xml ? xhr.responseXML : JSON.parse(xhr.responseText));
+				callback.call(self, self.xml ? xhr.responseXML : JSON.parse(xhr.responseText));
 		};
 	}
 };

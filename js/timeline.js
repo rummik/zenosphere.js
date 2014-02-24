@@ -6,20 +6,21 @@ function Timeline(settings) {
 	var count = 0;
 
 	this.element = document.querySelector(settings.element) || document.createElement('div');
+	this.messages = document.createElement('div');
+
+	var next = document.createElement('a');
+	next.href = '#';
+	next.innerHTML = 'Show 20 more';
+	next.onclick = function() {
+		self.display(20);
+		return false;
+	};
 
 	function ready() {
 		if (++count != self.streams.length)
 			return;
 
-		if (self.element) {
-			var message;
-			while (message = self.shift()) {
-				var div = document.createElement('div');
-				div.className = 'message';
-				div.innerHTML = message.message;
-				self.element.appendChild(div);
-			}
-		}
+		self.display(20);
 	}
 
 	this.streams = settings.streams.map(function(stream) {
@@ -29,7 +30,22 @@ function Timeline(settings) {
 	});
 }
 
-Timeline.prototype.shift = function() {
+Timeline.prototype.display = function(count) {
+	var self = this;
+	var n = 0;
+
+	this.nextMessage(function display(message) {
+		var div = document.createElement('div');
+		div.className = 'message message-' + message.type.toLowerCase().replace(/\W/g, '-');
+		div.innerHTML = message.message;
+		self.element.appendChild(div);
+
+		if (++n <= count)
+			self.nextMessage(display);
+	});
+};
+
+Timeline.prototype.nextMessage = function(callback) {
 	var stream = this.streams[0];
 	var streams = this.streams.length;
 
@@ -38,10 +54,8 @@ Timeline.prototype.shift = function() {
 			stream = this.streams[i];
 	}
 
-	if (!stream.end())
-		return stream.shift();
-
-	return null;
+	if (!stream.empty())
+		stream.read(callback);
 };
 
 window.Timeline = Timeline;

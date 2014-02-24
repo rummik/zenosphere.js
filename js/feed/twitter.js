@@ -12,12 +12,12 @@ Timeline.Stream.type.Twitter = {
 		callback: '?',
 
 		max_id: function() {
-			if (this.max_id)
-				return this.max_id;
+			if (this.received.low > 0)
+				return this.received.low;
 		},
 	},
 
-	pages: 3,
+	pages: 10,
 	fill: function fillTwitter(done) {
 		var self = this;
 
@@ -27,7 +27,10 @@ Timeline.Stream.type.Twitter = {
 
 			var tweets = [].slice.apply(doc.querySelectorAll('.tweet'));
 
-			self.max_id = tweets[tweets.length - 1].getAttribute('data-tweet-id');
+			if (self.received.high == -1)
+				self.received.high = tweets[0].getAttribute('data-tweet-id');
+
+			self.received.low = tweets[tweets.length - 1].getAttribute('data-tweet-id');
 
 			tweets.forEach(function(tweet) {
 				self.messages.push({

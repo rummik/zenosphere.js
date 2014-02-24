@@ -8,7 +8,7 @@ Timeline.Stream.type.GitHub = {
 		Accept: 'application/vnd.github.v3+json',
 	},
 
-	pages: 2,
+	pages: 10,
 	fill: function fillGitHub(done) {
 		var self = this;
 
