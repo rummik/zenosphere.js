@@ -53,6 +53,12 @@ Timeline.prototype.display = function(count) {
 		var div = document.createElement('div');
 		div.className = 'message message-' + message.type.toLowerCase().replace(/\W/g, '-');
 		div.innerHTML = _.template('<i class="fa fa-' + Timeline.Stream.type[message.type].icon + '"></i> {message}', message);
+
+		div.onclick = function(event) {
+			if (event.target === this && message.link)
+				window.open(message.link);
+		};
+
 		self.messages.appendChild(div);
 
 		if (++n <= count)
