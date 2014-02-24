@@ -1,6 +1,8 @@
 (function() {
 'use strict';
 
+var _ = Timeline.helpers;
+
 Timeline.Stream.type.Twitter = {
 	api: 'https://cdn.syndication.twimg.com/widgets/timelines/',
 	jsonp: true,
@@ -12,7 +14,7 @@ Timeline.Stream.type.Twitter = {
 		callback: '?',
 
 		max_id: function() {
-			if (this.received.low > 0)
+			if (this.received.low)
 				return this.received.low;
 		},
 	},
@@ -27,20 +29,24 @@ Timeline.Stream.type.Twitter = {
 
 			var tweets = [].slice.apply(doc.querySelectorAll('.tweet'));
 
-			if (self.received.high == -1)
+			if (!self.received.high)
 				self.received.high = tweets[0].getAttribute('data-tweet-id');
 
 			self.received.low = tweets[tweets.length - 1].getAttribute('data-tweet-id');
 
 			tweets.forEach(function(tweet) {
 				self.messages.push({
-					date: new Date(tweet.querySelector('.permalink').getAttribute('data-datetime')).valueOf(),
+					date: _.parseTime(tweet.querySelector('.permalink').getAttribute('data-datetime')),
 					message: tweet.querySelector('.e-entry-title').innerHTML.replace(/<.+?>/g, ''),
 				});
 			});
 
 			done();
 		});
+	},
+
+	latest: function latestTwitter(done) {
+		done();
 	},
 };
 

@@ -10,11 +10,14 @@ function Timeline(settings) {
 
 	var next = document.createElement('a');
 	next.href = '#';
-	next.innerHTML = 'Show 20 more';
+	next.innerHTML = 'Load more';
 	next.onclick = function() {
 		self.display(20);
 		return false;
 	};
+
+	this.element.appendChild(this.messages);
+	this.element.appendChild(next);
 
 	function ready() {
 		if (++count != self.streams.length)
@@ -30,6 +33,13 @@ function Timeline(settings) {
 	});
 }
 
+Timeline.helpers = {
+	parseTime: function(stamp) {
+		stamp = new Date(stamp).valueOf().toString();
+		return parseInt(stamp.substr(0, stamp.length - 3));
+	},
+};
+
 Timeline.prototype.display = function(count) {
 	var self = this;
 	var n = 0;
@@ -38,7 +48,7 @@ Timeline.prototype.display = function(count) {
 		var div = document.createElement('div');
 		div.className = 'message message-' + message.type.toLowerCase().replace(/\W/g, '-');
 		div.innerHTML = message.message;
-		self.element.appendChild(div);
+		self.messages.appendChild(div);
 
 		if (++n <= count)
 			self.nextMessage(display);

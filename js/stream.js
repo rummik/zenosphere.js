@@ -14,8 +14,8 @@ function Stream(options) {
 	this.messages = [];
 
 	this.received = {
-		high: -1,
-		low: -1,
+		high: undefined,
+		low: undefined,
 	};
 
 	Object.keys(Stream.type[this.type]).forEach(function clone(key) {
