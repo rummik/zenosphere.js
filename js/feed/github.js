@@ -12,11 +12,15 @@ Timeline.Stream.type.GitHub = {
 		Accept: 'application/vnd.github.v3+json',
 	},
 
+	params: {
+		page: function() { return this.page; },
+	},
+
 	pages: 10,
 	fill: function fillGitHub(done) {
 		var self = this;
 
-		this.get(this.stream + '/events/public?page=' + this.page, function(events) {
+		this.get(this.stream + '/events/public', function(events) {
 			this.received.init(_.parseTime(events[0].created_at));
 
 			events.forEach(function(event) {

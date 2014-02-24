@@ -84,7 +84,7 @@ Stream.prototype._callback = function(callback) {
 	return cb;
 };
 
-Stream.prototype._params = function(callback) {
+Stream.prototype._params = function() {
 	var self = this;
 	var params = '';
 
@@ -93,8 +93,6 @@ Stream.prototype._params = function(callback) {
 
 		if (typeof val == 'function')
 			val = val.call(self);
-		else if (val == '?')
-			val = self._callback(callback);
 
 		if (val == undefined)
 			return;
@@ -106,18 +104,18 @@ Stream.prototype._params = function(callback) {
 };
 
 Stream.prototype.get = function(path, callback) {
-	var url = this.api + path;
-	var self = this;
+	var url = this.api + path + this._params();
 
 	if (this.jsonp) {
 		var s = document.createElement('script');
-		s.src = url + this._params(callback);
+		s.src = url.replace(/([?&][^=]+=)\?(&|$)/, '$1' + this._callback(callback) + '$2');
 		document.body.appendChild(s);
 	} else {
 		var xhr = new XMLHttpRequest();
 		xhr.open('GET', url);
 		xhr.send();
 
+		var self = this;
 		xhr.onreadystatechange = function() {
 			if (xhr.readyState == 4 && xhr.status == 200)
 				callback.call(self, self.xml ? xhr.responseXML : JSON.parse(xhr.responseText));
