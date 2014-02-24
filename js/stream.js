@@ -16,6 +16,11 @@ function Stream(options) {
 	this.received = {
 		high: undefined,
 		low: undefined,
+
+		init: function(high) {
+			if (!this.high)
+				this.high = high;
+		},
 	};
 
 	Object.keys(Stream.type[this.type]).forEach(function clone(key) {

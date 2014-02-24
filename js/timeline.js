@@ -7,6 +7,7 @@ function Timeline(settings) {
 
 	this.element = document.querySelector(settings.element) || document.createElement('div');
 	this.messages = document.createElement('div');
+	this.messages.className = 'messages';
 
 	var next = document.createElement('a');
 	next.href = '#';
@@ -20,10 +21,8 @@ function Timeline(settings) {
 	this.element.appendChild(next);
 
 	function ready() {
-		if (++count != self.streams.length)
-			return;
-
-		self.display(20);
+		if (++count == self.streams.length)
+			self.display(80);
 	}
 
 	this.streams = settings.streams.map(function(stream) {

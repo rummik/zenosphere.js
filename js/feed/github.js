@@ -17,8 +17,7 @@ Timeline.Stream.type.GitHub = {
 		var self = this;
 
 		this.get(this.stream + '/events/public?page=' + this.page, function(events) {
-			if (!self.received.high)
-				self.received.high = _.parseTime(events[0].created_at);
+			this.received.init(_.parseTime(events[0].created_at));
 
 			events.forEach(function(event) {
 				var date = _.parseTime(event.created_at);

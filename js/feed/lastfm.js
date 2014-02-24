@@ -14,11 +14,10 @@ Timeline.Stream.type['Last.fm'] = {
 		var self = this;
 		var from = this.received.low ? '&to=' + this.received.low : '';
 
-		this.get('user/' + this.stream + '/recenttracks.rss?limit=50' + from, function(data) {
+		this.get('user/' + this.stream + '/recenttracks.rss?limit=100' + from, function(data) {
 			var tracks = [].slice.apply(data.querySelectorAll('item'));
 
-			if (!self.received.high)
-				self.received.high = _.parseTime(tracks[0].querySelector('pubDate').innerHTML);
+			self.received.init(_.parseTime(tracks[0].querySelector('pubDate').innerHTML));
 
 			self.received.low = _.parseTime(tracks[tracks.length - 1].querySelector('pubDate').innerHTML);
 

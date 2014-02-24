@@ -31,8 +31,7 @@ Timeline.Stream.type.Twitter = {
 
 			var tweets = [].slice.apply(doc.querySelectorAll('.tweet'));
 
-			if (!self.received.high)
-				self.received.high = tweets[0].getAttribute('data-tweet-id');
+			self.received.init(tweets[0].getAttribute('data-tweet-id'));
 
 			self.received.low = tweets[tweets.length - 1].getAttribute('data-tweet-id');
 
