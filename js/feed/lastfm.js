@@ -33,6 +33,7 @@ Timeline.Stream.type['Last.fm'] = {
 				self.messages.push({
 					date: _.parseTime(track.querySelector('pubDate').innerHTML),
 					message: track.querySelector('title').innerHTML,
+					link: track.querySelector('link').innerHTML,
 				});
 			});
 

@@ -39,6 +39,7 @@ Timeline.Stream.type.Twitter = {
 				self.messages.push({
 					date: _.parseTime(tweet.querySelector('.permalink').getAttribute('data-datetime')),
 					message: tweet.querySelector('.e-entry-title').innerHTML.replace(/<.+?>/g, ''),
+					link: tweet.querySelector('.permalink').href,
 				});
 			});
 
