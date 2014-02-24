@@ -46,7 +46,7 @@ Timeline.Stream.type.Twitter = {
 		});
 	},
 
-	latest: function latestTwitter(done) {
+	poll: function latestTwitter(done) {
 		done();
 	},
 };

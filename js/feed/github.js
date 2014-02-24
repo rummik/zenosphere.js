@@ -41,7 +41,7 @@ Timeline.Stream.type.GitHub = {
 		});
 	},
 
-	latest: function latestGitHub(done) {
+	poll: function latestGitHub(done) {
 		done();
 	},
 };

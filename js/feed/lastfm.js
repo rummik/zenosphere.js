@@ -40,7 +40,7 @@ Timeline.Stream.type['Last.fm'] = {
 		});
 	},
 
-	latest: function latestLastfm(done) {
+	poll: function latestLastfm(done) {
 		done();
 	},
 };
