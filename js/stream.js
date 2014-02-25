@@ -89,6 +89,10 @@ Stream.prototype.request = function(action, callback) {
 	});
 };
 
+/**
+ * Get the date for the current message
+ * @returns {integer} Date when message was published
+ */
 Stream.prototype.current = function() {
 	if (this.buffer.length)
 		return this.buffer[0].date;
@@ -96,6 +100,10 @@ Stream.prototype.current = function() {
 	return 0;
 };
 
+/**
+ * Get the next message in our stream
+ * @param {function} callback(message)  Callback with message
+ */
 Stream.prototype.shift = function(callback) {
 	if (this.buffer.length <= 1 && (!this.options.paginate || (this.options.paginate !== true && this.vars.page < this.options.paginate)))
 		return this.fill(this.shift.bind(this, callback));
@@ -105,6 +113,10 @@ Stream.prototype.shift = function(callback) {
 	callback(this.buffer.shift());
 };
 
+/**
+ * Find out if the stream is empty
+ * @returns {boolean} True if empty, false otherwise
+ */
 Stream.prototype.empty = function() {
 	return !this.buffer.length &&
 	       this.options.paginate &&
