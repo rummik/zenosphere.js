@@ -25,10 +25,14 @@ function Timeline(settings) {
 			self.display(80);
 	}
 
-	this.streams = settings.streams.map(function(stream) {
+	this.streams = [];
+	settings.streams.forEach(function(stream) {
+		if (typeof Timeline.Stream.source[stream.type] == 'undefined')
+			return;
+
 		var str = new Timeline.Stream(stream);
 		str.ready = ready;
-		return str;
+		self.streams.push(str);
 	});
 }
 
@@ -39,8 +43,23 @@ var _ = Timeline.helpers = {
 	},
 
 	template: function(text, data) {
-		return text.replace(/{(\w+)}/g, function(m, key) {
+		return text.toString().replace(/{(\w+)}/g, function(m, key) {
 			return data[key];
+		});
+	},
+
+	toArray: function(iterable) {
+		return [].slice.apply(iterable);
+	},
+
+	copy: function(to, from) {
+		Object.keys(from).forEach(function clone(key) {
+			var val = from[key];
+
+			if (typeof val == 'object')
+				val = new val.constructor(val);
+
+			to[key == 'fill' ? '_fill' : key] = val;
 		});
 	},
 };
@@ -52,7 +71,7 @@ Timeline.prototype.display = function(count) {
 	this.nextMessage(function display(message) {
 		var div = document.createElement('div');
 		div.className = 'message message-' + message.type.toLowerCase().replace(/\W/g, '-');
-		div.innerHTML = _.template('<i class="fa fa-' + Timeline.Stream.type[message.type].icon + '"></i> {message}', message);
+		div.innerHTML = _.template('<i class="fa fa-' + Timeline.Stream.source[message.type].icon + '"></i> {message}', message);
 
 		div.onclick = function(event) {
 			if (event.target === this && message.link)
@@ -71,12 +90,12 @@ Timeline.prototype.nextMessage = function(callback) {
 	var streams = this.streams.length;
 
 	for (var i=0; i<streams; i++) {
-		if (this.streams[i].now() > stream.now())
+		if (this.streams[i].current() > stream.current())
 			stream = this.streams[i];
 	}
 
 	if (!stream.empty())
-		stream.read(callback);
+		stream.shift(callback);
 };
 
 window.Timeline = Timeline;

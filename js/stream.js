@@ -1,69 +1,115 @@
 (function() {
 'use strict';
 
+var _ = Timeline.helpers;
+
 function Stream(options) {
-	var self = this;
+	_.copy(this, Stream.source[options.type]);
 
-	this.type = options.type;
-	this.stream = options.stream;
+	this.vars = {};
+	_.copy(this.vars, options);
 
-	this.options = options;
+	this.buffer = [];
 
-	this.page = 0;
-	this.pages = 1;
-	this.messages = [];
-
-	this.received = {
-		high: undefined,
-		low: undefined,
-
-		init: function(high) {
-			if (!this.high)
-				this.high = high;
-		},
+	this.results = {
+		max: 0,
+		min: 0,
 	};
 
-	Object.keys(Stream.type[this.type]).forEach(function clone(key) {
-		var val = Stream.type[self.type][key];
+	if (this.options.paginate)
+		this.vars.page = 0;
 
-		if (typeof val == 'object')
-			val = new val.constructor(val);
-
-		self[key == 'fill' ? '_fill' : key] = val;
-	});
-
+	var self = this;
 	setTimeout(function() {
 		self.fill(self.ready);
 	}, 1);
 }
 
 Stream.type = {};
+Stream.source = {};
 
-Stream.prototype.fill = function(callback) {
-	this.page++;
-	this._fill.call(this, callback || function() {});
+Stream.prototype.poll = function(callback) {
+	this.request('poll', callback);
 };
 
-Stream.prototype.now = function() {
-	if (this.messages.length)
-		return this.messages[0].date;
+Stream.prototype.fill = function(callback) {
+	var self = this;
+	this.request(this.results.min ? 'refill' : 'fill', function(messages) {
+		self.buffer = messages;
+		callback();
+	});
+};
+
+Stream.prototype.request = function(action, callback) {
+	var path;
+	action = action || 'fill';
+
+	if (typeof this.options.action == 'string')
+		path = this.options.action;
+	else
+		path = this.options.action[action] || this.options.action['fill'];
+
+	if (this.options.paginate)
+		this.vars.page++;
+
+	this.get(_.template(path, this.vars), function(data) {
+		var self = this;
+		var messages = [];
+		var events = this.getEvents(data);
+
+		events.forEach(function(event) {
+			var id = self.getEventID(event);
+			var message;
+
+			if (action == 'poll' && id < self.results.max)
+				return;
+
+			if (action == 'refill' && id > self.results.min)
+				return;
+
+			if (!(message = self.getEventMessage(event)))
+				return;
+
+			messages.push({
+				type: self.vars.type,
+				date: self.getEventDate(event),
+				message: message,
+				link: self.getEventLink(event),
+			});
+		});
+
+		if (!this.results.max || action == 'poll')
+			this.results.max = this.getEventID(events[0]);
+
+		if (!this.results.min || action == 'fill' || action == 'refill')
+			this.results.min = this.getEventID(events[events.length - 1]);
+
+		if (typeof callback == 'function')
+			callback(messages);
+	});
+};
+
+Stream.prototype.current = function() {
+	if (this.buffer.length)
+		return this.buffer[0].date;
 
 	return 0;
 };
 
-Stream.prototype.read = function(callback) {
-	if (this.messages.length <= 1 && this.page < this.pages)
-		return this.fill(this.read.bind(this, callback));
+Stream.prototype.shift = function(callback) {
+	if (this.buffer.length <= 1 && (!this.options.paginate || (this.options.paginate !== true && this.vars.page < this.options.paginate)))
+		return this.fill(this.shift.bind(this, callback));
 	else if (this.empty())
 		return;
 
-	var message = this.messages.shift();
-	message.type = this.type;
-	callback(message);
+	callback(this.buffer.shift());
 };
 
 Stream.prototype.empty = function() {
-	return this.page >= this.pages && !this.messages.length;
+	return !this.buffer.length &&
+	       this.options.paginate &&
+	       this.options.paginate !== true &&
+	       this.vars.page >= this.options.paginate;
 };
 
 /**
@@ -97,16 +143,16 @@ Stream.prototype._params = function() {
 		if (val == undefined)
 			return;
 
-		params += '&' + key + '=' + val;
+		params += '&' + key + '=' + _.template(val, self.vars);
 	});
 
 	return '?' + params.substr(1);
 };
 
 Stream.prototype.get = function(path, callback) {
-	var url = this.api + path + this._params();
+	var url = this.options.url + path + this._params();
 
-	if (this.jsonp) {
+	if (this.options.response == 'jsonp') {
 		var s = document.createElement('script');
 		s.src = url.replace(/([?&][^=]+=)\?(&|$)/, '$1' + this._callback(callback) + '$2');
 		document.body.appendChild(s);
@@ -118,7 +164,7 @@ Stream.prototype.get = function(path, callback) {
 		var self = this;
 		xhr.onreadystatechange = function() {
 			if (xhr.readyState == 4 && xhr.status == 200)
-				callback.call(self, self.xml ? xhr.responseXML : JSON.parse(xhr.responseText));
+				callback.call(self, self.options.response == 'xml' ? xhr.responseXML : JSON.parse(xhr.responseText));
 		};
 	}
 };
