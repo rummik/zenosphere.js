@@ -68,7 +68,7 @@ Timeline.prototype.display = function(count) {
 	var self = this;
 	var n = 0;
 
-	this.nextMessage(function display(message) {
+	this._nextMessage(function display(message) {
 		var div = document.createElement('div');
 		div.className = 'message message-' + message.type.toLowerCase().replace(/\W/g, '-');
 		div.innerHTML = _.template('<i class="fa fa-' + Timeline.Stream.source[message.type].icon + '"></i> {message}', message);
@@ -81,11 +81,11 @@ Timeline.prototype.display = function(count) {
 		self.messages.appendChild(div);
 
 		if (++n <= count)
-			self.nextMessage(display);
+			self._nextMessage(display);
 	});
 };
 
-Timeline.prototype.nextMessage = function(callback) {
+Timeline.prototype._nextMessage = function(callback) {
 	var stream = this.streams[0];
 	var streams = this.streams.length;
 
