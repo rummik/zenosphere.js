@@ -14,7 +14,9 @@ Timeline.Stream.source.GitHub = {
 	},
 
 	params: {
-		page: '{page}',
+		page: function(action) {
+			return (action == 'poll') ? 1 : '{page}';
+		},
 	},
 
 	headers: {

@@ -49,7 +49,7 @@ Stream.prototype.request = function(action, callback) {
 	else
 		path = this.options.action[action] || this.options.action['fill'];
 
-	if (this.options.paginate)
+	if (this.options.paginate && action != 'poll')
 		this.vars.page++;
 
 	this.get(_.template(path, this.vars), action, function(data) {
