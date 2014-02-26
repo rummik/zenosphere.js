@@ -38,7 +38,8 @@ Timeline.Stream.source.Twitter = {
 		var doc = document.implementation.createHTMLDocument('twitter');
 		doc.body.innerHTML = data.body;
 
-		this.vars.user = this.getUser(doc);
+		if (!this.vars.user)
+			this.vars.user = this.getUser(doc);
 
 		return _.toArray(doc.querySelectorAll('.tweet'));
 	},
@@ -49,7 +50,7 @@ Timeline.Stream.source.Twitter = {
 	},
 
 	getEventID: function(event) {
-		return event.getAttribute('data-rendered-tweet-id');
+		return parseInt(event.getAttribute('data-rendered-tweet-id'), 10);
 	},
 
 	getEventDate: function(event) {

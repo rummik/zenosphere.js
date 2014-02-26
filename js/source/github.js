@@ -28,7 +28,7 @@ Timeline.Stream.source.GitHub = {
 	},
 
 	getEventID: function(event) {
-		return this.getEventDate(event);
+		return parseInt(this.getEventDate(event), 10);
 	},
 
 	getEventDate: function(event) {
