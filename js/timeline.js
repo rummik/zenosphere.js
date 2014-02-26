@@ -60,7 +60,7 @@ function Timeline(settings) {
 			for (var i=0; i<length; i++) {
 				buffer = buffers[0];
 				for (var m=1; m<buffers.length; m++) {
-					if (!buffer.length || buffer[0].date < buffers[i][0].date)
+					if (!buffer.length || (buffers[i].length && buffer[0].date < buffers[i][0].date))
 						buffer = buffers[i];
 				}
 
