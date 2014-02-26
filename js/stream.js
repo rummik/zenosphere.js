@@ -52,7 +52,7 @@ Stream.prototype.request = function(action, callback) {
 	if (this.options.paginate)
 		this.vars.page++;
 
-	this.get(_.template(path, this.vars), function(data) {
+	this.get(_.template(path, this.vars), action, function(data) {
 		var self = this;
 		var messages = [];
 		var events = this.getEvents(data);
@@ -142,7 +142,7 @@ Stream.prototype._callback = function(callback) {
 	return cb;
 };
 
-Stream.prototype._params = function() {
+Stream.prototype._params = function(action) {
 	var self = this;
 	var params = '';
 
@@ -150,7 +150,7 @@ Stream.prototype._params = function() {
 		var val = self.params[key];
 
 		if (typeof val == 'function')
-			val = val.call(self);
+			val = val.call(self, action);
 
 		if (val == undefined)
 			return;
@@ -161,8 +161,11 @@ Stream.prototype._params = function() {
 	return '?' + params.substr(1);
 };
 
-Stream.prototype.get = function(path, callback) {
-	var url = this.options.url + path + this._params();
+Stream.prototype.get = function(path, action, callback) {
+	var url = this.options.url + path + this._params(arguments.length == 3 ? action : '');
+
+	if (typeof callback == 'undefined')
+		callback = action;
 
 	if (this.options.response == 'jsonp') {
 		var s = document.createElement('script');
