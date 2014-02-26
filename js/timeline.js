@@ -22,7 +22,7 @@ function Timeline(settings) {
 
 	function ready() {
 		if (++count == self.streams.length)
-			self.display(80);
+			self.display(150);
 	}
 
 	this.streams = [];

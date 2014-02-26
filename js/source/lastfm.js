@@ -13,7 +13,7 @@ Timeline.Stream.source.Lastfm = {
 	},
 
 	params: {
-		limit: 100,
+		limit: 200,
 
 		from: function(action) {
 			if (action == 'poll')
