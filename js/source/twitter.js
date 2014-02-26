@@ -37,11 +37,19 @@ Timeline.Stream.source.Twitter = {
 	getEvents: function(data) {
 		var doc = document.implementation.createHTMLDocument('twitter');
 		doc.body.innerHTML = data.body;
+
+		this.vars.user = this.getUser(doc);
+
 		return _.toArray(doc.querySelectorAll('.tweet'));
 	},
 
+	getUser: function(data) {
+		var user = data.querySelector('.profile').href;
+		return user.substr(user.lastIndexOf('/') + 1);
+	},
+
 	getEventID: function(event) {
-		return event.getAttribute('data-tweet-id');
+		return event.getAttribute('data-rendered-tweet-id');
 	},
 
 	getEventDate: function(event) {
@@ -50,16 +58,35 @@ Timeline.Stream.source.Twitter = {
 
 	getEventMessage: function(event) {
 		var message = event.querySelector('.e-entry-title');
-		
+
+		_.toArray(message.querySelectorAll('.tco-hidden')).forEach(function(element) {
+			element.parentNode.removeChild(element);
+		});
+
 		_.toArray(message.querySelectorAll('a')).forEach(function(a) {
-			a.target = '_blank';
+			var link = document.createElement('a');
+			link.textContent = a.textContent;
+			link.target = '_blank';
+			link.href = a.href;
+			link.title = a.title;
+			a.parentNode.insertBefore(link, a);
+			a.parentNode.removeChild(a);
 		});
 
-		_.toArray(message.querySelectorAll('span.tco-hidden')).forEach(function(span) {
-			span.parentNode.removeChild(span);
-		});
+		var user = this.getUser(event);
+		message = message.innerHTML;
 
-		return message.innerHTML;
+		if (user != this.vars.user) {
+			message = _.template(
+				'RT <a href="https://twitter.com/{user}" target="_blank">@{user}</a>: {message}',
+				{
+					user: user,
+					message: message,
+				}
+			);
+		}
+
+		return message;
 	},
 
 	getEventLink: function(event) {
