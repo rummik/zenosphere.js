@@ -13,16 +13,19 @@ function Timeline(settings) {
 	next.href = '#';
 	next.innerHTML = 'Load more';
 	next.onclick = function() {
-		self.display(20);
+		self.next(20);
 		return false;
 	};
 
 	this.element.appendChild(this.messages);
 	this.element.appendChild(next);
 
+	this.ready = false;
 	function ready() {
-		if (++count == self.streams.length)
-			self.display(150);
+		if (++count == self.streams.length) {
+			self.ready = true;
+			self.next(150);
+		}
 	}
 
 	this.streams = [];
@@ -34,6 +37,42 @@ function Timeline(settings) {
 		str.ready = ready;
 		self.streams.push(str);
 	});
+
+	(function poll() {
+		setTimeout(poll, 60000);
+
+		if (!self.ready)
+			return;
+
+		var buffers = [];
+		var count = 0;
+		var length = 0;
+
+		function ready(mesgs) {
+			buffers.push(mesgs.reverse());
+			length += mesgs.length;
+
+			if (++count != self.streams.length)
+				return;
+
+
+			var buffer;
+			for (var i=0; i<length; i++) {
+				buffer = buffers[0];
+				for (var m=1; m<buffers.length; m++) {
+					if (!buffer.length || buffer[0].date < buffers[i][0].date)
+						buffer = buffers[i];
+				}
+
+				if (buffer.length)
+					self.display(buffer.shift(), true);
+			}
+		}
+
+		self.streams.forEach(function(stream) {
+			stream.poll(ready);
+		});
+	})();
 }
 
 var _ = Timeline.helpers = {
@@ -64,38 +103,40 @@ var _ = Timeline.helpers = {
 	},
 };
 
-Timeline.prototype.display = function(count) {
-	var self = this;
-	var n = 0;
+Timeline.prototype.display = function(message, prepend) {
+	var div = document.createElement('div');
+	div.className = 'message message-' + message.type.toLowerCase().replace(/\W/g, '-');
+	div.innerHTML = _.template('<i class="fa fa-' + Timeline.Stream.source[message.type].icon + '"></i> {message}', message);
 
-	this._nextMessage(function display(message) {
-		var div = document.createElement('div');
-		div.className = 'message message-' + message.type.toLowerCase().replace(/\W/g, '-');
-		div.innerHTML = _.template('<i class="fa fa-' + Timeline.Stream.source[message.type].icon + '"></i> {message}', message);
+	div.onclick = function(event) {
+		if (event.target === this && message.link)
+			window.open(message.link);
+	};
 
-		div.onclick = function(event) {
-			if (event.target === this && message.link)
-				window.open(message.link);
-		};
-
-		self.messages.appendChild(div);
-
-		if (++n <= count)
-			self._nextMessage(display);
-	});
+	if (prepend)
+		this.messages.insertBefore(div, this.messages.firstChild);
+	else
+		this.messages.appendChild(div);
 };
 
-Timeline.prototype._nextMessage = function(callback) {
+Timeline.prototype.next = function(n, count) {
 	var stream = this.streams[0];
 	var streams = this.streams.length;
+	count = count || 0;
 
 	for (var i=0; i<streams; i++) {
 		if (this.streams[i].current() > stream.current())
 			stream = this.streams[i];
 	}
 
-	if (!stream.empty())
-		stream.shift(callback);
+	if (stream.empty() || ++count > n)
+		return;
+
+	var self = this;
+	stream.shift(function shift(message) {
+		self.display(message);
+		self.next(n, count);
+	});
 };
 
 window.Timeline = Timeline;

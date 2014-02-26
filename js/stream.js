@@ -57,6 +57,9 @@ Stream.prototype.request = function(action, callback) {
 		var messages = [];
 		var events = this.getEvents(data);
 
+		if (!events.length)
+			return callback(messages);
+
 		events.forEach(function(event) {
 			var id = self.getEventID(event);
 			var message;
