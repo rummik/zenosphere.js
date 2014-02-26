@@ -61,10 +61,10 @@ Stream.prototype.request = function(action, callback) {
 			var id = self.getEventID(event);
 			var message;
 
-			if (action == 'poll' && id < self.results.max)
+			if (action == 'poll' && id <= self.results.max)
 				return;
 
-			if (action == 'refill' && id > self.results.min)
+			if (action == 'refill' && id >= self.results.min)
 				return;
 
 			if (!(message = self.getEventMessage(event)))
