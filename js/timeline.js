@@ -107,6 +107,9 @@ Timeline.prototype.display = function(message, prepend) {
 	div.className = 'message message-' + message.type.toLowerCase().replace(/\W/g, '-');
 	div.innerHTML = _.template('<i class="fa fa-' + Timeline.Stream.source[message.type].icon + '"></i> {message}', message);
 
+	if (message.link)
+		div.setAttribute('data-link', message.link);
+
 	div.onclick = function(event) {
 		if (event.target === this && message.link)
 			window.open(message.link);
