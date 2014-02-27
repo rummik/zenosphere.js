@@ -55,13 +55,12 @@ function Timeline(settings) {
 			if (++count != self.streams.length)
 				return;
 
-
 			var buffer;
 			for (var i=0; i<length; i++) {
 				buffer = buffers[0];
 				for (var m=1; m<buffers.length; m++) {
-					if (!buffer.length || (buffers[i].length && buffer[0].date < buffers[i][0].date))
-						buffer = buffers[i];
+					if (!buffer.length || (buffers[m].length && buffer[0].date < buffers[m][0].date))
+						buffer = buffers[m];
 				}
 
 				if (buffer.length)
