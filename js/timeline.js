@@ -77,7 +77,7 @@ function Timeline(settings) {
 var _ = Timeline.helpers = {
 	parseTime: function(stamp) {
 		stamp = new Date(stamp).valueOf().toString();
-		return parseInt(stamp.substr(0, stamp.length - 3));
+		return parseInt(stamp.substr(0, stamp.length - 3), 10);
 	},
 
 	template: function(text, data) {
