@@ -39,7 +39,7 @@ function Timeline(settings) {
 	});
 
 	(function poll() {
-		setTimeout(poll, 60000);
+		setTimeout(poll, 2 * 60000);
 
 		if (!self.ready)
 			return;
