@@ -58,7 +58,12 @@ Timeline.Stream.source.GitHub = {
 			return _.template(message, params);
 	},
 
-	getEventLink: function(event) {},
+	getEventLink: function(event) {
+		switch (event.type) {
+			case 'PushEvent':
+				return 'https://github.com/' + event.repo.name + '/compare/' + event.payload.before + '...' + event.payload.head;
+		}
+	},
 };
 
 })();
