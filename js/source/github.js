@@ -36,7 +36,26 @@ Timeline.Stream.source.GitHub = {
 	},
 
 	getEventMessage: function(event) {
-		return 'GitHub: ' + event.actor.login + ' ' + event.type;
+		var message = '';
+		var params = {};
+
+		switch (event.type) {
+			case 'PushEvent':
+				message = 'Pushed {commits} commit{s} to <code>{ref}</code> ' +
+				          'on <a href="{repo_url}">{repo}</a>';
+
+				params = {
+					commits: event.payload.size,
+					s: event.payload.size == 1 ? '' : 's',
+					ref: event.payload.ref.replace(/^refs\/heads\//, ''),
+					repo_url: event.repo.url,
+					repo: event.repo.name,
+				};
+				break;
+		}
+
+		if (message.length)
+			return _.template(message, params);
 	},
 
 	getEventLink: function(event) {},
