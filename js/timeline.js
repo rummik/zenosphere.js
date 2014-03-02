@@ -111,7 +111,7 @@ Timeline.prototype.display = function(message, prepend) {
 		div.setAttribute('data-link', message.link);
 
 	div.onclick = function(event) {
-		if (event.target === this && message.link)
+		if (event.target.tagName != 'A' && message.link)
 			window.open(message.link);
 	};
 
