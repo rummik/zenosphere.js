@@ -49,7 +49,7 @@ Timeline.Stream.source.GitHub = {
 					s: event.payload.size == 1 ? '' : 's',
 					ref: event.payload.ref.replace(/^refs\/heads\//, ''),
 					repo_url: event.repo.url,
-					repo: event.repo.name,
+					repo: event.repo.name.replace(new RegExp('^' + event.actor.login + '/'), ''),
 				};
 				break;
 		}
