@@ -42,13 +42,13 @@ Timeline.Stream.source.GitHub = {
 		switch (event.type) {
 			case 'PushEvent':
 				message = 'Pushed {commits} commit{s} to <code>{ref}</code> ' +
-				          'on <a href="{repo_url}">{repo}</a>';
+				          'on <a href="{repo_url}" target="_blank">{repo}</a>';
 
 				params = {
 					commits: event.payload.size,
 					s: event.payload.size == 1 ? '' : 's',
 					ref: event.payload.ref.replace(/^refs\/heads\//, ''),
-					repo_url: event.repo.url,
+					repo_url: 'https://github.com/' + event.repo.name,
 					repo: event.repo.name.replace(new RegExp('^' + event.actor.login + '/'), ''),
 				};
 				break;
