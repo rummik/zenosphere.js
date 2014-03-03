@@ -36,11 +36,28 @@ body {
 
 .messages {
 	line-height: 0;
+	width: 600px;
+	margin-left: 200px;
+	position: relative;
 }
 
-.message {
+.message, .message-date {
 	line-height: 1.2em;
-	margin: 0.2em 0;
+	margin: 0 0 0.2em;
+}
+	.message .fa {
+		position: absolute;
+		left: -1.1em;
+		line-height: inherit;
+	}
+
+.message-date {
+	position: absolute;
+	left: -200px;
+	width: 200px;
+	text-align: right;
+	margin-left: -1.5em;
+	margin-bottom: 0;
 }
 
 .message[data-link] {
@@ -51,6 +68,13 @@ body {
 	font-size: 0.5em;
 	margin-right: 1em;
 	display: inline-block;
+}
+	.message-lastfm .fa {
+		position: initial;
+	}
+
+.message-lastfm-date {
+	display: none;
 }
 </style>
 

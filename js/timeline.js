@@ -104,8 +104,14 @@ var _ = Timeline.helpers = {
 
 Timeline.prototype.display = function(message, prepend) {
 	var div = document.createElement('div');
-	div.className = 'message message-' + message.type.toLowerCase().replace(/\W/g, '-');
+	var date = document.createElement('div');
+	var type = message.type.toLowerCase().replace(/\W/g, '-');
+
+	div.className = 'message message-' + type;
 	div.innerHTML = _.template('<i class="fa fa-' + Timeline.Stream.source[message.type].icon + '"></i> {message}', message);
+
+	date.className = 'message-date message-' + type + '-date';
+	date.innerHTML = new Date(message.date * 1000).toLocaleTimeString();
 
 	if (message.link)
 		div.setAttribute('data-link', message.link);
@@ -115,10 +121,13 @@ Timeline.prototype.display = function(message, prepend) {
 			window.open(message.link);
 	};
 
-	if (prepend)
+	if (prepend) {
 		this.messages.insertBefore(div, this.messages.firstChild);
-	else
+		this.messages.insertBefore(date, this.messages.firstChild);
+	} else {
+		this.messages.appendChild(date);
 		this.messages.appendChild(div);
+	}
 };
 
 Timeline.prototype.next = function(n, count) {
