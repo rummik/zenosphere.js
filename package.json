@@ -1,0 +1,25 @@
+{
+  "name": "timeline.js",
+  "version": "0.4.0",
+  "private": true,
+  "description": "Client-side social media aggregator",
+  "main": "index.js",
+  "devDependencies": {
+    "grunt": "~0.4.2",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-jshint": "~0.8.0"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/rummik/timeline.js.git"
+  },
+  "author": "rummik",
+  "license": "MPL",
+  "bugs": {
+    "url": "https://github.com/rummik/timeline.js/issues"
+  },
+  "homepage": "https://github.com/rummik/timeline.js"
+}
