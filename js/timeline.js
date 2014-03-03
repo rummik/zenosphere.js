@@ -112,6 +112,7 @@ Timeline.prototype.display = function(message, prepend) {
 
 	date.className = 'message-date message-' + type + '-date';
 	date.innerHTML = new Date(message.date * 1000).toLocaleTimeString();
+	date.setAttribute('data-timestamp', message.date);
 
 	if (message.link)
 		div.setAttribute('data-link', message.link);
