@@ -1,6 +1,7 @@
 (function() {
 'use strict';
 
+/* global Timeline */
 var _ = Timeline.helpers;
 
 Timeline.Stream.source.GitHub = {
@@ -32,7 +33,7 @@ Timeline.Stream.source.GitHub = {
 	},
 
 	getEventDate: function(event) {
-		return _.parseTime(event.created_at);
+		return _.parseTime(event.created_at); // jshint ignore:line
 	},
 
 	getEventMessage: function(event) {
@@ -42,13 +43,13 @@ Timeline.Stream.source.GitHub = {
 		switch (event.type) {
 			case 'PushEvent':
 				message = 'Pushed {commits} commit{s} to <code>{ref}</code> ' +
-				          'on <a href="{repo_url}" target="_blank">{repo}</a>';
+				          'on <a href="{repoUrl}" target="_blank">{repo}</a>';
 
 				params = {
 					commits: event.payload.size,
 					s: event.payload.size == 1 ? '' : 's',
 					ref: event.payload.ref.replace(/^refs\/heads\//, ''),
-					repo_url: 'https://github.com/' + event.repo.name,
+					repoUrl: 'https://github.com/' + event.repo.name,
 					repo: event.repo.name.replace(new RegExp('^' + event.actor.login + '/'), ''),
 				};
 				break;

@@ -1,6 +1,7 @@
 (function() {
 'use strict';
 
+/* global Timeline */
 var _ = Timeline.helpers;
 
 function Stream(options) {
@@ -155,7 +156,7 @@ Stream.prototype._params = function(action) {
 		if (typeof val == 'function')
 			val = val.call(self, action);
 
-		if (val == undefined)
+		if (val === undefined)
 			return;
 
 		params += '&' + key + '=' + _.template(val, self.vars);

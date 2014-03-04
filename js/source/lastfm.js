@@ -1,6 +1,7 @@
 (function() {
 'use strict';
 
+/* global Timeline */
 var _ = Timeline.helpers;
 
 Timeline.Stream.source.Lastfm = {
@@ -35,7 +36,7 @@ Timeline.Stream.source.Lastfm = {
 	},
 
 	getEventDate: function(event) {
- 		return _.parseTime(event.querySelector('pubDate').innerHTML);
+		return _.parseTime(event.querySelector('pubDate').innerHTML);
 	},
 
 	getEventMessage: function(event) {

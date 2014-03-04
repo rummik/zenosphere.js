@@ -1,6 +1,7 @@
 (function() {
 'use strict';
 
+/* global Timeline */
 var _ = Timeline.helpers;
 
 Timeline.Stream.source.Twitter = {
@@ -16,6 +17,7 @@ Timeline.Stream.source.Twitter = {
 		},
 	},
 
+	/* jshint -W106 */
 	params: {
 		lang: 'en',
 		suppress_response_codes: 'true',
@@ -33,6 +35,7 @@ Timeline.Stream.source.Twitter = {
 				return this.results.min;
 		},
 	},
+	/* jshint +W106 */
 
 	getEvents: function(data) {
 		var doc = document.implementation.createHTMLDocument('twitter');
