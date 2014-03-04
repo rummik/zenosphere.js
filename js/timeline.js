@@ -111,7 +111,7 @@ Timeline.prototype.display = function(message, prepend) {
 	div.innerHTML = _.template('<i class="fa fa-' + Timeline.Stream.source[message.type].icon + '"></i> {message}', message);
 
 	date.className = 'message-date message-' + type + '-date';
-	date.innerHTML = new Date(message.date * 1000).toLocaleTimeString();
+	date.innerHTML = new Date(message.date * 1000).toLocaleString();
 	date.setAttribute('data-timestamp', message.date);
 
 	if (message.link)
