@@ -104,13 +104,19 @@ var _ = Timeline.helpers = {
 
 Timeline.prototype.display = function(message, prepend) {
 	var div = document.createElement('div');
-	var date = document.createElement('div');
+	var body = document.createElement('span');
+	var date = document.createElement('span');
+	var icon = document.createElement('i');
 	var type = message.type.toLowerCase().replace(/\W/g, '-');
 
 	div.className = 'message message-' + type;
-	div.innerHTML = _.template('<i class="fa fa-' + Timeline.Stream.source[message.type].icon + '"></i> {message}', message);
 
-	date.className = 'message-date message-' + type + '-date';
+	icon.className = 'fa fa-' + Timeline.Stream.source[message.type].icon;
+
+	body.className = 'message-body';
+	body.innerHTML = ' ' + message.message;
+
+	date.className = 'message-date';
 	date.innerHTML = new Date(message.date * 1000).toLocaleString();
 	date.setAttribute('data-timestamp', message.date);
 
@@ -122,13 +128,14 @@ Timeline.prototype.display = function(message, prepend) {
 			window.open(message.link);
 	};
 
-	if (prepend) {
+	div.appendChild(date);
+	div.appendChild(icon);
+	div.appendChild(body);
+
+	if (prepend)
 		this.messages.insertBefore(div, this.messages.firstChild);
-		this.messages.insertBefore(date, this.messages.firstChild);
-	} else {
-		this.messages.appendChild(date);
+	else
 		this.messages.appendChild(div);
-	}
 };
 
 Timeline.prototype.next = function(n, count) {
