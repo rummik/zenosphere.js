@@ -1,8 +1,8 @@
 (function() {
 'use strict';
 
-/* global Timeline */
-var _ = Timeline.helpers;
+/* global Zenosphere */
+var _ = Zenosphere.helpers;
 
 function Stream(options) {
 	_.copy(this, Stream.source[options.type]);
@@ -188,5 +188,5 @@ Stream.prototype.get = function(path, action, callback) {
 	}
 };
 
-Timeline.Stream = Stream;
+Zenosphere.Stream = Stream;
 })();

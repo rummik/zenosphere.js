@@ -1,7 +1,7 @@
 (function() {
 'use strict';
 
-function Timeline(settings) {
+function Zenosphere(settings) {
 	var self = this;
 	var count = 0;
 
@@ -30,10 +30,10 @@ function Timeline(settings) {
 
 	this.streams = [];
 	settings.streams.forEach(function(stream) {
-		if (typeof Timeline.Stream.source[stream.type] == 'undefined')
+		if (typeof Zenosphere.Stream.source[stream.type] == 'undefined')
 			return;
 
-		var str = new Timeline.Stream(stream);
+		var str = new Zenosphere.Stream(stream);
 		str.ready = ready;
 		self.streams.push(str);
 	});
@@ -74,7 +74,7 @@ function Timeline(settings) {
 	})();
 }
 
-var _ = Timeline.helpers = {
+var _ = Zenosphere.helpers = {
 	parseTime: function(stamp) {
 		stamp = new Date(stamp).valueOf().toString();
 		return parseInt(stamp.substr(0, stamp.length - 3), 10);
@@ -102,7 +102,7 @@ var _ = Timeline.helpers = {
 	},
 };
 
-Timeline.prototype.display = function(message, prepend) {
+Zenosphere.prototype.display = function(message, prepend) {
 	var div = document.createElement('div');
 	var body = document.createElement('span');
 	var date = document.createElement('span');
@@ -111,7 +111,7 @@ Timeline.prototype.display = function(message, prepend) {
 
 	div.className = 'message message-' + type;
 
-	icon.className = 'fa fa-' + Timeline.Stream.source[message.type].icon;
+	icon.className = 'fa fa-' + Zenosphere.Stream.source[message.type].icon;
 
 	body.className = 'message-body';
 	body.innerHTML = ' ' + message.message;
@@ -138,7 +138,7 @@ Timeline.prototype.display = function(message, prepend) {
 		this.messages.appendChild(div);
 };
 
-Timeline.prototype.next = function(n, count) {
+Zenosphere.prototype.next = function(n, count) {
 	var stream = this.streams[0];
 	var streams = this.streams.length;
 	count = count || 0;
@@ -158,6 +158,6 @@ Timeline.prototype.next = function(n, count) {
 	});
 };
 
-window.Timeline = Timeline;
+window.Zenosphere = Zenosphere;
 
 })();

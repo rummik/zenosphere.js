@@ -1,10 +1,10 @@
 (function() {
 'use strict';
 
-/* global Timeline */
-var _ = Timeline.helpers;
+/* global Zenosphere */
+var _ = Zenosphere.helpers;
 
-Timeline.Stream.source.Twitter = {
+Zenosphere.Stream.source.Twitter = {
 	icon: 'twitter',
 
 	options: {
