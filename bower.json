@@ -1,0 +1,26 @@
+{
+  "name": "timeline.js",
+  "version": "0.4.0",
+  "homepage": "https://github.com/rummik/timeline.js",
+  "authors": [
+    "rummik <r@9k1.us>"
+  ],
+  "description": "Client-side social media aggregator",
+  "main": "dist/timeline.js",
+  "keywords": [
+    "social",
+    "media",
+    "aggregator",
+    "twitter",
+    "github",
+    "last.fm"
+  ],
+  "license": "MPL",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
