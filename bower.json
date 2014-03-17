@@ -1,11 +1,11 @@
 {
   "name": "zenosphere.js",
+  "description": "Client-side social media aggregator",
   "version": "0.4.0",
   "homepage": "https://github.com/rummik/zenosphere.js",
   "authors": [
     "rummik <r@9k1.us>"
   ],
-  "description": "Client-side social media aggregator",
   "main": "dist/zenosphere.js",
   "keywords": [
     "social",
