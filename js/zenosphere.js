@@ -110,6 +110,7 @@ Zenosphere.prototype.display = function(message, prepend) {
 	var type = message.type.toLowerCase().replace(/\W/g, '-');
 
 	div.className = 'message message-' + type;
+	div.setAttribute('data-timestamp', message.date);
 
 	icon.className = 'fa fa-' + Zenosphere.Stream.source[message.type].icon;
 
@@ -118,7 +119,6 @@ Zenosphere.prototype.display = function(message, prepend) {
 
 	date.className = 'message-date';
 	date.innerHTML = new Date(message.date * 1000).toLocaleString();
-	date.setAttribute('data-timestamp', message.date);
 
 	if (message.link)
 		div.setAttribute('data-link', message.link);
@@ -132,10 +132,17 @@ Zenosphere.prototype.display = function(message, prepend) {
 	div.appendChild(icon);
 	div.appendChild(body);
 
-	if (prepend)
-		this.messages.insertBefore(div, this.messages.firstChild);
-	else
-		this.messages.appendChild(div);
+	// finish up here if we only have to append
+	if (!prepend)
+		return this.messages.appendChild(div);
+
+	var messages = this.messages.children;
+	var length = messages.length;
+
+	// step through messages until we find one that is older than the message we just received
+	for (var i=0; i<length && +messages[i].getAttribute('data-timestamp') > message.date; i++);
+
+	this.messages.insertBefore(div, messages[i]);
 };
 
 Zenosphere.prototype.next = function(n, count) {
