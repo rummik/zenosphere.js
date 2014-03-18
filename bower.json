@@ -6,7 +6,10 @@
   "authors": [
     "rummik <r@9k1.us>"
   ],
-  "main": "dist/zenosphere.js",
+  "main": [
+    "dist/zenosphere.js",
+    "dist/zenosphere.css"
+  ],
   "keywords": [
     "social",
     "media",
