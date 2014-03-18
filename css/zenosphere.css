@@ -1,21 +1,24 @@
-body {
-	font-family: sans-serif;
+.zenosphere > a {
+	display: block;
+	width: 100%;
+	text-align: center;
+	padding: .5em 0;
 }
 
-.messages {
+.zenosphere .messages {
 	line-height: 0;
-	width: 600px;
 	margin-left: 200px;
+	margin-left: calc(200px - 0.7em);
 	position: relative;
 	border-left: 1px solid #000;
-	padding-left: .7em;
+	padding: 0.5em 0 0.5em .7em;
 }
 
-.message, .message-date {
+.zenosphere .message, .zenosphere .message-date {
 	line-height: 1.2em;
 	margin: 0 0 0.2em;
 }
-	.message .fa {
+	.zenosphere .message .fa {
 		position: absolute;
 		left: -0.5em;
 		line-height: inherit;
@@ -23,7 +26,7 @@ body {
 		             3px 3px 0 #fff, -3px 3px 0 #fff, 3px -3px 0 #fff, -3px -3px 0 #fff;
 	}
 
-.message-date {
+.zenosphere .message-date {
 	position: absolute;
 	left: -200px;
 	width: 200px;
@@ -32,20 +35,20 @@ body {
 	margin-bottom: 0;
 }
 
-.message[data-link] {
+.zenosphere .message[data-link] {
 	cursor: pointer;
 }
 
-.message-lastfm {
+.zenosphere .message-lastfm {
 	font-size: 0.5em;
 	margin-right: 1em;
 	display: inline-block;
 }
-	.message-lastfm .fa {
+	.zenosphere .message-lastfm .fa {
 		position: initial;
 		text-shadow: none;
 	}
 
-	.message-lastfm .message-date {
+	.zenosphere .message-lastfm .message-date {
 		display: none;
 	}
