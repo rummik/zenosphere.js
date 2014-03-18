@@ -1,7 +1,7 @@
 {
   "name": "zenosphere.js",
   "description": "Client-side social media aggregator",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "author": {
     "name": "rummik",
     "email": "r@9k1.us",
