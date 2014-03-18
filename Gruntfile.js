@@ -40,12 +40,23 @@ module.exports = function(grunt) {
 		uglify: {
 			dist: {
 				src: [
-					'js/timeline.js',
+					'js/zenosphere.js',
 					'js/stream.js',
 					'js/source/*.js',
 				],
 
-				dest: 'dist/timeline.js',
+				dest: 'dist/zenosphere.js',
+			},
+
+			options: {
+				banner: '<%= banner %>',
+			},
+		},
+
+		cssmin: {
+			dist: {
+				src: 'css/zenosphere.css',
+				dest: 'dist/zenosphere.css',
 			},
 
 			options: {
@@ -57,10 +68,11 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-watch');
+	grunt.loadNpmTasks('grunt-contrib-cssmin');
 
 	grunt.registerTask('default', ['test', 'minify']);
 	grunt.registerTask('test', ['jshint']);
-	grunt.registerTask('minify', ['uglify']);
+	grunt.registerTask('minify', ['uglify', 'cssmin']);
 
 	grunt.registerTask('pkgreload', 'Reload package.json', function() {
 		grunt.log.writeln('Reloading package.json');
