@@ -53,7 +53,7 @@ Zenosphere.Stream.source.Twitter = {
 	},
 
 	getEventID: function(event) {
-		return parseInt(event.getAttribute('data-rendered-tweet-id'), 10);
+		return parseInt(event.getAttribute('data-tweet-id'), 10);
 	},
 
 	getEventDate: function(event) {
