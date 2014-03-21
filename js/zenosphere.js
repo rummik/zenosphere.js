@@ -66,6 +66,8 @@ function Zenosphere(settings) {
 				if (buffer.length)
 					self.display(buffer.shift(), true);
 			}
+
+			self.updateTime();
 		}
 
 		self.streams.forEach(function(stream) {
@@ -74,10 +76,29 @@ function Zenosphere(settings) {
 	})();
 }
 
-Zenosphere.helpers = {
+var _ = Zenosphere.helpers = {
 	parseTime: function(stamp) {
 		stamp = new Date(stamp).valueOf().toString();
 		return parseInt(stamp.substr(0, stamp.length - 3), 10);
+	},
+
+	fuzzyTime: function(stamp) {
+		var diff = (Date.now() - stamp * 1000) / 1000;
+
+		if (diff < 2)
+			return 'just now';
+		else if (diff < 60)
+			return diff + 's ago';
+		else if (diff < 3600)
+			return Math.ceil(diff / 60) + 'm ago';
+		else if (diff < 60 * 60 * 23)
+			return Math.ceil(diff / 60 / 60) + 'h ago';
+		else if (diff < 60 * 60 * 24 * 6)
+			return Math.ceil(diff / 60 / 60 / 24) + 'd ago';
+		else
+			return Math.ceil(diff / 60 / 60 / 24 / 7) + 'w ago';
+
+		return new Date(stamp * 1000).toLocaleString();
 	},
 
 	template: function(text, data) {
@@ -102,6 +123,12 @@ Zenosphere.helpers = {
 	},
 };
 
+Zenosphere.prototype.updateTime = function() {
+	[].forEach.call(this.messages.children, function(message) {
+		message.firstChild.innerHTML = _.fuzzyTime(message.getAttribute('data-timestamp'));
+	});
+};
+
 Zenosphere.prototype.display = function(message, prepend) {
 	var div = document.createElement('div');
 	var body = document.createElement('span');
@@ -118,7 +145,7 @@ Zenosphere.prototype.display = function(message, prepend) {
 	body.innerHTML = ' ' + message.message;
 
 	date.className = 'message-date';
-	date.innerHTML = new Date(message.date * 1000).toLocaleString();
+	date.innerHTML = _.fuzzyTime(message.date);
 
 	if (message.link)
 		div.setAttribute('data-link', message.link);
