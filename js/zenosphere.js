@@ -83,7 +83,7 @@ var _ = Zenosphere.helpers = {
 	},
 
 	fuzzyTime: function(stamp) {
-		var diff = (Date.now() - stamp * 1000) / 1000;
+		var diff = Math.floor((Date.now() - stamp * 1000) / 1000);
 
 		if (diff < 2)
 			return 'just now';
