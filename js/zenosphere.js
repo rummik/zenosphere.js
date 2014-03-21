@@ -177,7 +177,7 @@ Zenosphere.prototype.next = function(n, count) {
 	var streams = this.streams.length;
 	count = count || 0;
 
-	for (var i=0; i<streams; i++) {
+	for (var i=1; i<streams; i++) {
 		if (this.streams[i].current() > stream.current())
 			stream = this.streams[i];
 	}
