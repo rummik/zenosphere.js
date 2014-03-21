@@ -13,7 +13,7 @@ function Zenosphere(settings) {
 	next.href = '#';
 	next.innerHTML = 'Load more';
 	next.onclick = function() {
-		self.next(20);
+		self.next(150);
 		return false;
 	};
 
