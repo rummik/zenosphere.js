@@ -57,7 +57,8 @@ Zenosphere.Stream.source.Twitter = {
 	},
 
 	getEventDate: function(event) {
-		return _.parseTime(event.querySelector('.permalink').getAttribute('data-datetime'));
+		var snowflake = parseInt(event.getAttribute('data-tweet-id'), 10);
+		return Math.floor((snowflake / 4194304 + 1288834974657) / 1000);
 	},
 
 	getEventMessage: function(event) {
