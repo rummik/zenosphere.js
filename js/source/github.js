@@ -9,14 +9,14 @@ Zenosphere.Stream.source.GitHub = {
 
 	options: {
 		response: 'json',
-		paginate: 10,
+		paginate: 2,
 		url: 'https://api.github.com/',
 		action: '{stream}/events/public',
 	},
 
 	params: {
 		page: function(action) {
-			return (action == 'poll') ? 1 : '{page}';
+			return (action === 'poll') ? 1 : '{page}';
 		},
 	},
 
@@ -47,7 +47,7 @@ Zenosphere.Stream.source.GitHub = {
 
 				params = {
 					commits: event.payload.size,
-					s: event.payload.size == 1 ? '' : 's',
+					s: event.payload.size === 1 ? '' : 's',
 					ref: event.payload.ref.replace(/^refs\/heads\//, ''),
 					repoUrl: 'https://github.com/' + event.repo.name,
 					repo: event.repo.name.replace(new RegExp('^' + event.actor.login + '/'), ''),
@@ -55,14 +55,16 @@ Zenosphere.Stream.source.GitHub = {
 				break;
 		}
 
-		if (message.length)
+		if (message.length) {
 			return _.template(message, params);
+		}
 	},
 
 	getEventLink: function(event) {
 		switch (event.type) {
 			case 'PushEvent':
-				return 'https://github.com/' + event.repo.name + '/compare/' + event.payload.before + '...' + event.payload.head;
+				return 'https://github.com/' + event.repo.name + '/compare/' +
+					event.payload.before + '...' + event.payload.head;
 		}
 	},
 };

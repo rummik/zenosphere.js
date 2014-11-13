@@ -1,0 +1,20 @@
+{
+	"source": {
+		"js": [
+			"js/zenosphere.js",
+			"js/stream.js",
+			"js/source/*.js"
+		],
+
+		"css": [
+			"css/*.styl"
+		],
+
+		"internal": [
+			"gulpfile.js",
+			"*.json",
+			"config/**/*.{js,json}",
+			"tasks/!(_*).js"
+		]
+	}
+}

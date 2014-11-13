@@ -1,5 +1,47 @@
-/*! zenosphere.js - v0.4.6 - 2014-03-21
-* https://github.com/rummik/zenosphere.js
-* Copyright (c) 2014 rummik <r@9k1.us>; Licensed MPL */
-
-.zenosphere>a{display:block;width:100%;text-align:center;padding:.5em 0}.zenosphere .messages{line-height:0;margin-left:5em;position:relative;border-left:1px solid #000;padding:.5em 0 .5em .7em}.zenosphere .message,.zenosphere .message-date{line-height:1.2em;margin:0 0 .2em}.zenosphere .message .fa{position:absolute;left:-.5em;line-height:inherit;text-shadow:3px 0 0 #fff,-3px 0 0 #fff,0 3px 0 #fff,0 -3px 0 #fff,3px 3px 0 #fff,-3px 3px 0 #fff,3px -3px 0 #fff,-3px -3px 0 #fff}.zenosphere .message-date{position:absolute;left:-5em;width:5em;text-align:right;margin-left:-1em;margin-bottom:0}.zenosphere .message[data-link]{cursor:pointer}.zenosphere .message-lastfm{font-size:.5em;margin-right:1em;display:inline-block}.zenosphere .message-lastfm .fa{position:initial;text-shadow:none}.zenosphere .message-lastfm .message-date{display:none}
+.zenosphere > a {
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: 0.5em 0;
+}
+.zenosphere .messages {
+  line-height: 0;
+  margin-left: 5em;
+  position: relative;
+  border-left: 1px solid #000;
+  padding: 0.5em 0 0.5em 0.7em;
+}
+.zenosphere .message,
+.zenosphere .message-date {
+  line-height: 1.2em;
+  margin: 0 0 0.2em;
+}
+.zenosphere .message .fa {
+  position: absolute;
+  left: -0.5em;
+  line-height: inherit;
+  text-shadow: 3px 0 0 #fff, -3px 0 0 #fff, 0 3px 0 #fff, 0 -3px 0 #fff, 3px 3px 0 #fff, -3px 3px 0 #fff, 3px -3px 0 #fff, -3px -3px 0 #fff;
+}
+.zenosphere .message .message-date {
+  position: absolute;
+  left: -5em;
+  width: 5em;
+  text-align: right;
+  margin-left: -1em;
+  margin-bottom: 0;
+}
+.zenosphere .message[data-link] {
+  cursor: pointer;
+}
+.zenosphere .message-lastfm {
+  font-size: 0.5em;
+  margin-right: 1em;
+  display: inline-block;
+}
+.zenosphere .message-lastfm .fa {
+  position: initial;
+  text-shadow: none;
+}
+.zenosphere .message-lastfm .message-date {
+  display: none;
+}

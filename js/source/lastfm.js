@@ -17,13 +17,15 @@ Zenosphere.Stream.source.Lastfm = {
 		limit: 200,
 
 		from: function(action) {
-			if (action == 'poll')
+			if (action === 'poll') {
 				return this.results.max;
+			}
 		},
 
 		to: function(action) {
-			if (action == 'refill')
+			if (action === 'refill') {
 				return this.results.min;
+			}
 		},
 	},
 

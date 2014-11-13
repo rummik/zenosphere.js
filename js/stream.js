@@ -17,8 +17,9 @@ function Stream(options) {
 		min: 0,
 	};
 
-	if (this.options.paginate)
+	if (this.options.paginate) {
 		this.vars.page = 0;
+	}
 
 	var self = this;
 	setTimeout(function() {
@@ -45,34 +46,40 @@ Stream.prototype.request = function(action, callback) {
 	var path;
 	action = action || 'fill';
 
-	if (typeof this.options.action == 'string')
+	if (typeof this.options.action === 'string') {
 		path = this.options.action;
-	else
+	} else {
 		path = this.options.action[action] || this.options.action['fill'];
+	}
 
-	if (this.options.paginate && action != 'poll')
+	if (this.options.paginate && action !== 'poll') {
 		this.vars.page++;
+	}
 
 	this.get(_.template(path, this.vars), action, function(data) {
 		var self = this;
 		var messages = [];
 		var events = this.getEvents(data);
 
-		if (!events.length)
+		if (!events.length) {
 			return callback(messages);
+		}
 
 		events.forEach(function(event) {
 			var id = self.getEventID(event);
 			var message;
 
-			if (action == 'poll' && id <= self.results.max)
+			if (action === 'poll' && id <= self.results.max) {
 				return;
+			}
 
-			if (action == 'refill' && id >= self.results.min)
+			if (action === 'refill' && id >= self.results.min) {
 				return;
+			}
 
-			if (!(message = self.getEventMessage(event)))
+			if (!(message = self.getEventMessage(event))) {
 				return;
+			}
 
 			messages.push({
 				type: self.vars.type,
@@ -82,14 +89,17 @@ Stream.prototype.request = function(action, callback) {
 			});
 		});
 
-		if (!this.results.max || action == 'poll')
+		if (!this.results.max || action === 'poll') {
 			this.results.max = this.getEventID(events[0]);
+		}
 
-		if (!this.results.min || action == 'fill' || action == 'refill')
+		if (!this.results.min || action === 'fill' || action === 'refill') {
 			this.results.min = this.getEventID(events[events.length - 1]);
+		}
 
-		if (typeof callback == 'function')
+		if (typeof callback === 'function') {
 			callback(messages);
+		}
 	});
 };
 
@@ -98,8 +108,9 @@ Stream.prototype.request = function(action, callback) {
  * @returns {integer} Date when message was published
  */
 Stream.prototype.current = function() {
-	if (this.buffer.length)
+	if (this.buffer.length) {
 		return this.buffer[0].date;
+	}
 
 	return 0;
 };
@@ -109,10 +120,14 @@ Stream.prototype.current = function() {
  * @param {function} callback(message)  Callback with message
  */
 Stream.prototype.shift = function(callback) {
-	if (this.buffer.length <= 1 && (!this.options.paginate || (this.options.paginate !== true && this.vars.page < this.options.paginate)))
+	if (this.buffer.length <= 1 &&
+	    (!this.options.paginate ||
+	     (this.options.paginate !== true &&
+	      this.vars.page < this.options.paginate))) {
 		return this.fill(this.shift.bind(this, callback));
-	else if (this.empty())
+	} else if (this.empty()) {
 		return;
+	}
 
 	callback(this.buffer.shift());
 };
@@ -153,11 +168,13 @@ Stream.prototype._params = function(action) {
 	Object.keys(this.params).forEach(function(key) {
 		var val = self.params[key];
 
-		if (typeof val == 'function')
+		if (typeof val === 'function') {
 			val = val.call(self, action);
+		}
 
-		if (val === undefined)
+		if (val === undefined) {
 			return;
+		}
 
 		params += '&' + key + '=' + _.template(val, self.vars);
 	});
@@ -166,12 +183,14 @@ Stream.prototype._params = function(action) {
 };
 
 Stream.prototype.get = function(path, action, callback) {
-	var url = this.options.url + path + this._params(arguments.length == 3 ? action : '');
+	var url = this.options.url + path +
+		  this._params(arguments.length === 3 ? action : '');
 
-	if (typeof callback == 'undefined')
+	if (typeof callback === 'undefined') {
 		callback = action;
+	}
 
-	if (this.options.response == 'jsonp') {
+	if (this.options.response === 'jsonp') {
 		var s = document.createElement('script');
 		s.src = url.replace(/([?&][^=]+=)\?(&|$)/, '$1' + this._callback(callback) + '$2');
 		document.body.appendChild(s);
@@ -182,8 +201,14 @@ Stream.prototype.get = function(path, action, callback) {
 
 		var self = this;
 		xhr.onreadystatechange = function() {
-			if (xhr.readyState == 4 && xhr.status == 200)
-				callback.call(self, self.options.response == 'xml' ? xhr.responseXML : JSON.parse(xhr.responseText));
+			if (xhr.readyState === 4 && xhr.status === 200) {
+				callback.call(
+					self,
+					self.options.response === 'xml' ?
+					xhr.responseXML :
+					JSON.parse(xhr.responseText)
+				);
+			}
 		};
 	}
 };

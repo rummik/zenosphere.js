@@ -1,7 +1,7 @@
 {
   "name": "zenosphere.js",
   "description": "Client-side social media aggregator",
-  "version": "0.4.6",
+  "version": "0.5-dev",
   "homepage": "https://github.com/rummik/zenosphere.js",
   "authors": [
     "rummik <r@9k1.us>"
@@ -24,6 +24,7 @@
     "node_modules",
     "bower_components",
     "test",
-    "tests"
+    "package.json",
+    "gulpfile.js"
   ]
 }

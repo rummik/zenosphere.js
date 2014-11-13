@@ -26,13 +26,15 @@ Zenosphere.Stream.source.Twitter = {
 		callback: '?',
 
 		since_id: function(action) {
-			if (action == 'poll')
+			if (action === 'poll') {
 				return this.results.max;
+			}
 		},
 
 		max_id: function(action) {
-			if (action == 'refill')
+			if (action === 'refill') {
 				return this.results.min;
+			}
 		},
 	},
 	/* jshint +W106 */
@@ -41,8 +43,9 @@ Zenosphere.Stream.source.Twitter = {
 		var doc = document.implementation.createHTMLDocument('twitter');
 		doc.body.innerHTML = data.body;
 
-		if (!this.vars.user)
+		if (!this.vars.user) {
 			this.vars.user = this.getUser(doc);
+		}
 
 		return _.toArray(doc.querySelectorAll('.tweet'));
 	},
@@ -81,7 +84,7 @@ Zenosphere.Stream.source.Twitter = {
 		var user = this.getUser(event);
 		message = message.innerHTML;
 
-		if (user != this.vars.user) {
+		if (user !== this.vars.user) {
 			message = _.template(
 				'RT <a href="https://twitter.com/{user}" target="_blank">@{user}</a>: {message}',
 				{
