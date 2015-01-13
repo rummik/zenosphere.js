@@ -1,10 +1,12 @@
 'use strict';
 
+var gulp = rquire('gulp');
+
 module.exports = function() {
-	return this.src(this.config('source:js'))
-		.pipe(this.plugin.cached('uglify'))
-		.pipe(this.plugin.uglify())
-		.pipe(this.plugin.remember('uglify'))
-		.pipe(this.plugin.concat('zenosphere.js'))
-		.pipe(this.dest('dist'));
+	return gulp.src(gulp.config('source:js'))
+		.pipe(gulp.plugin.cached('uglify'))
+		.pipe(gulp.plugin.uglify())
+		.pipe(gulp.plugin.remember('uglify'))
+		.pipe(gulp.plugin.concat('zenosphere.js'))
+		.pipe(gulp.dest('dist'));
 };

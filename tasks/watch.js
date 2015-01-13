@@ -1,13 +1,14 @@
 'use strict';
 
+var gulp = rquire('gulp');
 var runSequence = require('run-sequence');
 
 module.exports = [['jshint-internal', 'test', 'build'], function() {
-	this.watch(this.config('source:internal'), ['jshint-internal']);
+	gulp.watch(gulp.config('source:internal'), ['jshint-internal']);
 
-	this.watch(this.config('source:css'), ['stylus']);
+	gulp.watch(gulp.config('source:css'), ['stylus']);
 
-	this.watch(this.config('source:js'), runSequence.bind({}, [
+	gulp.watch(gulp.config('source:js'), runSequence.bind({}, [
 		'jshint',
 		'uglify'
 	]));

@@ -1,5 +1,7 @@
 'use strict';
 
+var gulp = rquire('gulp');
+
 module.exports = function() {
 	var config = require('../config/jshintrc.json');
 	var jshintrc = require('../config/jshintrc-internal.json');
@@ -8,9 +10,9 @@ module.exports = function() {
 		config[key] = jshintrc[key];
 	});
 
-	return this.src(['gulpfile.js', '*.json', 'config/*.{js,json}', 'tasks/!(_*).js'])
-		.pipe(this.plugin.cached('jshint-internal'))
-		.pipe(this.plugin.jshint(config))
-		.pipe(this.plugin.remember('jshint-internal'))
-		.pipe(this.plugin.jshint.reporter('jshint-stylish'));
+	return gulp.src(['gulpfile.js', '*.json', 'config/*.{js,json}', 'tasks/!(_*).js'])
+		.pipe(gulp.plugin.cached('jshint-internal'))
+		.pipe(gulp.plugin.jshint(config))
+		.pipe(gulp.plugin.remember('jshint-internal'))
+		.pipe(gulp.plugin.jshint.reporter('jshint-stylish'));
 };

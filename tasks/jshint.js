@@ -1,9 +1,11 @@
 'use strict';
 
+var gulp = rquire('gulp');
+
 module.exports = function() {
-	return this.src(this.config('source:js'))
-		.pipe(this.plugin.cached('jshint'))
-		.pipe(this.plugin.jshint('config/jshintrc.json'))
-		.pipe(this.plugin.remember('jshint'))
-		.pipe(this.plugin.jshint.reporter('jshint-stylish'));
+	return gulp.src(gulp.config('source:js'))
+		.pipe(gulp.plugin.cached('jshint'))
+		.pipe(gulp.plugin.jshint('config/jshintrc.json'))
+		.pipe(gulp.plugin.remember('jshint'))
+		.pipe(gulp.plugin.jshint.reporter('jshint-stylish'));
 };
