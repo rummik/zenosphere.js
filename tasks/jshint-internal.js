@@ -1,6 +1,6 @@
 'use strict';
 
-var gulp = rquire('gulp');
+var gulp = require('gulp');
 
 module.exports = function() {
 	var config = require('../config/jshintrc.json');

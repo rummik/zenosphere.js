@@ -21,10 +21,9 @@ function Stream(options) {
 		this.vars.page = 0;
 	}
 
-	var self = this;
-	setTimeout(function() {
-		self.fill(self.ready);
-	}, 1);
+	setTimeout((function() {
+		this.fill(this.ready);
+	}).bind(this), 1);
 }
 
 Stream.type = {};
@@ -35,11 +34,10 @@ Stream.prototype.poll = function(callback) {
 };
 
 Stream.prototype.fill = function(callback) {
-	var self = this;
-	this.request(this.results.min ? 'refill' : 'fill', function(messages) {
-		self.buffer = messages;
+	this.request(this.results.min ? 'refill' : 'fill', (function(messages) {
+		this.buffer = messages;
 		callback();
-	});
+	}).bind(this));
 };
 
 Stream.prototype.request = function(action, callback) {
@@ -49,7 +47,7 @@ Stream.prototype.request = function(action, callback) {
 	if (typeof this.options.action === 'string') {
 		path = this.options.action;
 	} else {
-		path = this.options.action[action] || this.options.action['fill'];
+		path = this.options.action[action] || this.options.action.fill;
 	}
 
 	if (this.options.paginate && action !== 'poll') {
@@ -57,7 +55,6 @@ Stream.prototype.request = function(action, callback) {
 	}
 
 	this.get(_.template(path, this.vars), action, function(data) {
-		var self = this;
 		var messages = [];
 		var events = this.getEvents(data);
 
@@ -65,29 +62,29 @@ Stream.prototype.request = function(action, callback) {
 			return callback(messages);
 		}
 
-		events.forEach(function(event) {
-			var id = self.getEventID(event);
+		events.forEach((function(event) {
+			var id = this.getEventID(event);
 			var message;
 
-			if (action === 'poll' && id <= self.results.max) {
+			if (action === 'poll' && id <= this.results.max) {
 				return;
 			}
 
-			if (action === 'refill' && id >= self.results.min) {
+			if (action === 'refill' && id >= this.results.min) {
 				return;
 			}
 
-			if (!(message = self.getEventMessage(event))) {
+			if (!(message = this.getEventMessage(event))) {
 				return;
 			}
 
 			messages.push({
-				type: self.vars.type,
-				date: self.getEventDate(event),
+				type: this.vars.type,
+				date: this.getEventDate(event),
 				message: message,
-				link: self.getEventLink(event),
+				link: this.getEventLink(event),
 			});
-		});
+		}).bind(this));
 
 		if (!this.results.max || action === 'poll') {
 			this.results.max = this.getEventID(events[0]);
@@ -151,33 +148,31 @@ Stream.prototype.empty = function() {
  */
 Stream.prototype._callback = function(callback) {
 	var cb = 'timeline_cb_' + Math.random().toString().substr(2);
-	var self = this;
 
-	window[cb] = function() {
-		callback.apply(self, arguments);
+	window[cb] = (function() {
+		callback.apply(this, arguments);
 		delete window[cb];
-	};
+	}).bind(this);
 
 	return cb;
 };
 
 Stream.prototype._params = function(action) {
-	var self = this;
 	var params = '';
 
-	Object.keys(this.params).forEach(function(key) {
-		var val = self.params[key];
+	Object.keys(this.params).forEach((function(key) {
+		var val = this.params[key];
 
 		if (typeof val === 'function') {
-			val = val.call(self, action);
+			val = val.call(this, action);
 		}
 
 		if (val === undefined) {
 			return;
 		}
 
-		params += '&' + key + '=' + _.template(val, self.vars);
-	});
+		params += '&' + key + '=' + _.template(val, this.vars);
+	}).bind(this));
 
 	return '?' + params.substr(1);
 };
@@ -199,17 +194,16 @@ Stream.prototype.get = function(path, action, callback) {
 		xhr.open('GET', url);
 		xhr.send();
 
-		var self = this;
-		xhr.onreadystatechange = function() {
+		xhr.onreadystatechange = (function() {
 			if (xhr.readyState === 4 && xhr.status === 200) {
 				callback.call(
-					self,
-					self.options.response === 'xml' ?
+					this,
+					this.options.response === 'xml' ?
 					xhr.responseXML :
 					JSON.parse(xhr.responseText)
 				);
 			}
-		};
+		}).bind(this);
 	}
 };
 

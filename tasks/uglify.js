@@ -1,6 +1,6 @@
 'use strict';
 
-var gulp = rquire('gulp');
+var gulp = require('gulp');
 
 module.exports = function() {
 	return gulp.src(gulp.config('source:js'))

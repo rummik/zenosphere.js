@@ -2,7 +2,6 @@
 'use strict';
 
 function Zenosphere(settings) {
-	var self = this;
 	var count = 0;
 
 	this.element = document.querySelector(settings.element) || document.createElement('div');
@@ -12,37 +11,37 @@ function Zenosphere(settings) {
 	var next = document.createElement('a');
 	next.href = '#';
 	next.innerHTML = 'Load more';
-	next.onclick = function() {
-		self.next(150);
+	next.onclick = (function() {
+		this.next(150);
 		return false;
-	};
+	}).bind(this);
 
 	this.element.appendChild(this.messages);
 	this.element.appendChild(next);
 
 	this.ready = false;
-	function ready() {
-		if (++count === self.streams.length) {
-			self.ready = true;
-			self.next(150);
+	var ready = (function() {
+		if (++count === this.streams.length) {
+			this.ready = true;
+			this.next(150);
 		}
-	}
+	}).bind(this);
 
 	this.streams = [];
-	settings.streams.forEach(function(stream) {
+	settings.streams.forEach((function(stream) {
 		if (typeof Zenosphere.Stream.source[stream.type] === 'undefined') {
 			return;
 		}
 
 		var str = new Zenosphere.Stream(stream);
 		str.ready = ready;
-		self.streams.push(str);
-	});
+		this.streams.push(str);
+	}).bind(this));
 
 	(function poll() {
 		setTimeout(poll, 2 * 60000);
 
-		if (!self.ready) {
+		if (!this.ready) {
 			return;
 		}
 
@@ -50,11 +49,11 @@ function Zenosphere(settings) {
 		var count = 0;
 		var length = 0;
 
-		function ready(mesgs) {
+		var ready = (function(mesgs) {
 			buffers.push(mesgs.reverse());
 			length += mesgs.length;
 
-			if (++count !== self.streams.length) {
+			if (++count !== this.streams.length) {
 				return;
 			}
 
@@ -70,17 +69,17 @@ function Zenosphere(settings) {
 				}
 
 				if (buffer.length) {
-					self.display(buffer.shift(), true);
+					this.display(buffer.shift(), true);
 				}
 			}
 
-			self.updateTime();
-		}
+			this.updateTime();
+		}).bind(this);
 
-		self.streams.forEach(function(stream) {
+		this.streams.forEach(function(stream) {
 			stream.poll(ready);
 		});
-	})();
+	}).bind(this)();
 }
 
 var _ = Zenosphere.helpers = {
@@ -199,11 +198,10 @@ Zenosphere.prototype.next = function(n, count) {
 		return;
 	}
 
-	var self = this;
-	stream.shift(function shift(message) {
-		self.display(message);
-		self.next(n, count);
-	});
+	stream.shift((function shift(message) {
+		this.display(message);
+		this.next(n, count);
+	}).bind(this));
 };
 
 window.Zenosphere = Zenosphere;

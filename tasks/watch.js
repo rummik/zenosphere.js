@@ -1,6 +1,6 @@
 'use strict';
 
-var gulp = rquire('gulp');
+var gulp = require('gulp');
 var runSequence = require('run-sequence');
 
 module.exports = [['jshint-internal', 'test', 'build'], function() {
